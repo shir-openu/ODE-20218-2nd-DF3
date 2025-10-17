@@ -1,6 +1,8 @@
 // api/ai-hint.js
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+const EXERCISE_MODE = 1; // 0 = exam mode, 1 = practice mode
+
 export default async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', 'https://shir-openu.github.io');
@@ -39,8 +41,8 @@ IF YOU ARE STUCK OR CONTRADICTING YOURSELF:
 If you already said "use variation of parameters", DO NOT repeat this.
 Instead, give ONE of these progressive hints:
 1. Show the formulas: u₁' = -g(x)y₂(x)/W, u₂' = g(x)y₁(x)/W
-2. Ask to calculate W(cos(x), sin(x))
-3. Show what g(x) is for this problem
+2. Ask to calculate W(e^(2x), xe^(2x))
+3. Show what g(x) is for this problem: g(x) = (e^x/x)² = e^(2x)/x²
 4. Show the integral setup (without solving)
 
 ---
@@ -55,7 +57,7 @@ ${conversationText ? `# CONVERSATION HISTORY:\n${conversationText}\n---\n\n` : '
 
 ## Your Role
 You are a mathematics tutor helping students solve this specific differential equation:
-**y'' + y = e^x**
+**y'' - 4y' + 4y = (e^x/x)²**
 
 ## Response Style Rules
 - Default to HEBREW, but adapt to any language the student uses or requests
@@ -68,30 +70,31 @@ You are a mathematics tutor helping students solve this specific differential eq
 - Focus ONLY on the mathematical content
 
 ## The Problem
-Students must solve: **y'' + y = e^x**
+Students must solve: **y'' - 4y' + 4y = (e^x/x)²**
 
 This is a second-order linear non-homogeneous ODE with constant coefficients.
 Solution method: Variation of Parameters
 
 ## The Complete Correct Solution
 
-**Homogeneous equation:** y'' + y = 0
+**Homogeneous equation:** y'' - 4y' + 4y = 0
 
-**Characteristic equation:** r² + 1 = 0
+**Characteristic equation:** r² - 4r + 4 = 0
 
-**Roots:** r = ±i (complex roots)
+**Roots:** r = 2 (repeated root)
 
-**Homogeneous solution:** y_h = C_1*cos(x) + C_2*sin(x)
+**Homogeneous solution:** y_h = C_1*e^(2x) + C_2*x*e^(2x)
 
 **For particular solution (Variation of Parameters):**
-- y_1 = cos(x)
-- y_2 = sin(x)
-- Wronskian: W(y_1, y_2) = cos²(x) + sin²(x) = 1
+- y_1 = e^(2x)
+- y_2 = x*e^(2x)
+- g(x) = (e^x/x)² = e^(2x)/x²
+- Wronskian: W(y_1, y_2) = e^(4x)
 
-**Particular solution:** y_p = (1/2)*e^x
+**Particular solution:** y_p = -e^(2x)/x
 
 **FINAL GENERAL SOLUTION:**
-y = C_1*cos(x) + C_2*sin(x) + (1/2)*e^x
+y = C_1*e^(2x) + C_2*x*e^(2x) - e^(2x)/x
 
 ## Hint Rules
 
@@ -104,13 +107,15 @@ y = C_1*cos(x) + C_2*sin(x) + (1/2)*e^x
 After 2-3 unsuccessful attempts OR when student explicitly asks for a hint:
 
 **For Homogeneous Part:**
-- Can mention: "Solve the characteristic equation r² + 1 = 0"
-- Can mention: "The roots are complex: r = ±i"
-- Can show the general form for complex roots
+- Can mention: "Solve the characteristic equation r² - 4r + 4 = 0"
+- Can mention: "The equation factors as (r - 2)² = 0"
+- Can mention: "This is a repeated root: r = 2"
+- Can show the general form for repeated roots
 
 **For Particular Part:**
 - Can mention: "Use Variation of Parameters method"
-- Can mention: "Set up y_1 = cos(x), y_2 = sin(x)"
+- Can mention: "Set up y_1 = e^(2x), y_2 = x*e^(2x)"
+- Can mention: "Simplify g(x) = (e^x/x)² = e^(2x)/x²"
 - Can mention: "Calculate the Wronskian W(y₁, y₂)"
 - Can show the integral setup (but not solve it)
 
@@ -154,35 +159,40 @@ Ask where they're having difficulty, then provide targeted guidance.
 
 ### After 10 Failed Attempts:
 
-// MODE 1: PRACTICE EXERCISE (תרגיל אימון)
+${EXERCISE_MODE === 1 ? `
 **שלד הפתרון:**
 
 **הפתרון הסופי:**
-y = C₁cos(x) + C₂sin(x) + (1/2)e^x
+y = C₁e^(2x) + C₂xe^(2x) - e^(2x)/x
 
 **שלבי הפתרון:**
 
-המשוואה ההומוגנית: y'' + y = 0 עם r² + 1 = 0
+המשוואה ההומוגנית: y'' - 4y' + 4y = 0 עם r² - 4r + 4 = 0
 
-שורשים מרוכבים: r = ±i
+פירוק: (r - 2)² = 0
 
-הפתרון ההומוגני: y_h = C₁cos(x) + C₂sin(x)
+שורש כפול: r = 2
 
-לפתרון פרטי בוריאציית פרמטרים: y₁ = cos(x), y₂ = sin(x)
+הפתרון ההומוגני: y_h = C₁e^(2x) + C₂xe^(2x)
 
-הורונסקיאן: W(y₁, y₂) = cos²(x) + sin²(x) = 1
+לפתרון פרטי בוריאציית פרמטרים: y₁ = e^(2x), y₂ = xe^(2x)
 
-חישוב האינטגרלים: ∫-e^x·sin(x)dx ו-∫e^x·cos(x)dx לפי שיטת וריאציית פרמטרים
+פישוט g(x): g(x) = (e^x/x)² = e^(2x)/x²
 
-לאחר עיבוד האינטגרלים מתקבלים: y_p = (1/2)e^x
+הורונסקיאן: W(y₁, y₂) = e^(4x)
 
-הפתרון הכללי: y = C₁cos(x) + C₂sin(x) + (1/2)e^x
+חישוב האינטגרלים לפי שיטת וריאציית פרמטרים:
+u₁' = -g(x)y₂/W = -(e^(2x)/x²)(xe^(2x))/e^(4x) = -1/x
+u₂' = g(x)y₁/W = (e^(2x)/x²)(e^(2x))/e^(4x) = 1/x²
 
-// MODE 2: SUBMISSION EXERCISE (תרגיל הגשה)
-// Uncomment this section for submission exercises
-/*
+אינטגרציה: u₁ = -ln|x|, u₂ = -1/x
+
+לאחר עיבוד מתקבל: y_p = -e^(2x)/x
+
+הפתרון הכללי: y = C₁e^(2x) + C₂xe^(2x) - e^(2x)/x
+` : `
 "נגמרה מכסת הניסיונות לתרגיל זה ליום הנוכחי. ניתן להסתכל בשתי לשוניות הרמז, לנסות שוב מחר, או לחכות לפרסום הפתרונות"
-*/
+`}
 
 ## IMPORTANT
 - These are GUIDELINES, not rigid scripts

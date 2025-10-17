@@ -137,6 +137,13 @@
   .hint{color:var(--muted);font-size:.95rem;margin-top:8px;line-height:1.9}
   .monospace{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Courier New",monospace}
   select{background:var(--field);color:var(--ink);border:1px solid var(--ring);border-radius:10px;padding:6px 8px}
+
+  /* Footer */
+  .footer{
+    margin-top:24px;padding:12px 0;
+    text-align:left;font-size:0.85rem;
+    color:var(--muted);direction:ltr;
+  }
 </style>
 <style>
   /* סגנון מינימלי לסרגל המשוואות */
@@ -218,6 +225,11 @@ y = C_1*sin(3x) + C_2*cos(2x) + x*ln|x| + (x^2)/2"></textarea>
 </div>
         </section>
       </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        © The Open University of Israel | Developed by Shir Sivroni
+      </div>
     </section>
 
     <!-- Panel: רמז 1 -->
@@ -259,45 +271,50 @@ const problems = [
     id: 'ode_second_order_variation_params_01',
     title: 'מסדר שני — וריאציית פרמטרים',
     
-    latexProblem: String.raw`y'' + y = e^x`,
-    homogeneousSolution: String.raw`y_h = C_1 \cos(x) + C_2 \sin(x)`,
-    particularSolution: String.raw`y_p = (1/2)e^x`,
+    latexProblem: String.raw`y'' - 4y' + 4y = \left(\frac{e^x}{x}\right)^2`,
+    homogeneousSolution: String.raw`y_h = C_1 e^{2x} + C_2 x e^{2x}`,
+    particularSolution: String.raw`y_p = -\frac{e^{2x}}{x}`,
     exampleInput: '',
     
     hint1Html: `
       זוהי משוואה לינארית אי-הומוגנית מסדר שני עם מקדמים קבועים.<br/>
       השתמשו בשיטת וריאציית הפרמטרים לפתרון.<br/>
       הפתרון הכללי: \\(y = y_h + y_p\\)<br/>
-      כאשר \\(y_h\\) הוא הפתרון של המשוואה ההומוגנית \\(y'' + y = 0\\)<br/>
-      המשוואה ההומוגנית: \\(r^2 + 1 = 0\\) עם שורשים \\(r = \\pm i\\)<br/>
+      כאשר \\(y_h\\) הוא הפתרון של המשוואה ההומוגנית \\(y'' - 4y' + 4y = 0\\)<br/>
+      המשוואה האופיינית: \\(r^2 - 4r + 4 = 0\\) שמתפרקת ל-\\((r-2)^2 = 0\\)<br/>
+      שורש כפול: \\(r = 2\\)<br/>
       מהו הפתרון ההומוגני?
     `,
     
     hint2Html: `
-      הפונקציה (g(x) = e^x) פשוטה יחסית אך נשתמש בוריאציית פרמטרים.<br/>
-      הפתרון ההומוגני: \\(y_h = C_1 \\cos x + C_2 \\sin x\\)<br/>
-      לוריאציית פרמטרים: \\(y_1 = \\cos x, y_2 = \\sin x\\)<br/>
-      חשבו את הרונסקיאן: \\(W(y_1, y_2) = \\begin{vmatrix} \\cos x & \\sin x \\\\ -\\sin x & \\cos x \\end{vmatrix}\\)<br/>
+      הפתרון ההומוגני: \\(y_h = C_1 e^{2x} + C_2 x e^{2x}\\)<br/>
+      לוריאציית פרמטרים: \\(y_1 = e^{2x}, y_2 = x e^{2x}\\)<br/>
+      פישוט g(x): \\(g(x) = \\left(\\frac{e^x}{x}\\right)^2 = \\frac{e^{2x}}{x^2}\\)<br/>
+      חשבו את הרונסקיאן: \\(W(y_1, y_2) = \\begin{vmatrix} e^{2x} & xe^{2x} \\\\ 2e^{2x} & e^{2x}(1+2x) \\end{vmatrix}\\)<br/>
       הפתרון הפרטי: \\(y_p = -y_1 \\int \\frac{y_2 g(x)}{W} dx + y_2 \\int \\frac{y_1 g(x)}{W} dx\\)
     `,
     
-    solutionDisplayLatex: String.raw`y = C_1 \cos x + C_2 \sin x + (1/2)e^x`,
+    solutionDisplayLatex: String.raw`y = C_1 e^{2x} + C_2 x e^{2x} - \frac{e^{2x}}{x}`,
     solutionStepsHtml: `
-      המשוואה ההומוגנית: \\(y'' + y = 0\\) עם \\(r^2 + 1 = 0\\).<br/>
-      שורשים מרוכבים: \\(r = \\pm i\\).<br/>
-      הפתרון ההומוגני: \\(y_h = C_1 \\cos x + C_2 \\sin x\\).<br/>
-      לפתרון פרטי בוריאציית פרמטרים: \\(y_1 = \\cos x, y_2 = \\sin x\\).<br/>
-      הרונסקיאן: \\(W(y_1, y_2) = \\cos^2 x + \\sin^2 x = 1\\).<br/>
-      חישוב האינטגרלים: (int -e^x sin x , dx) ו-(int e^x s x , dx) לפי וריאציית פרמטרים.<br/>
-      לאחר עיבוד האינטגרלים מקבלים: (y_p = (1/2)e^x).<br/>
-      הפתרון הכללי: (y = C_1 \cos x + C_2 \sin x + (1/2)e^x).
+      המשוואה ההומוגנית: \\(y'' - 4y' + 4y = 0\\) עם \\(r^2 - 4r + 4 = 0\\).<br/>
+      פירוק: \((r-2)^2 = 0\).<br/>
+      שורש כפול: \(r = 2\).<br/>
+      הפתרון ההומוגני: \(y_h = C_1 e^{2x} + C_2 x e^{2x}\).<br/>
+      לפתרון פרטי בוריאציית פרמטרים: \(y_1 = e^{2x}, y_2 = x e^{2x}\).<br/>
+      פישוט g(x): \(g(x) = \left(\frac{e^x}{x}\right)^2 = \frac{e^{2x}}{x^2}\).<br/>
+      הרונסקיאן: \(W(y_1, y_2) = e^{4x}\).<br/>
+      חישוב האינטגרלים לפי וריאציית פרמטרים:<br/>
+      \(u_1' = -\frac{g(x)y_2}{W} = -\frac{1}{x}\), \(u_2' = \frac{g(x)y_1}{W} = \frac{1}{x^2}\).<br/>
+      אינטגרציה: \(u_1 = -\ln|x|\), \(u_2 = -\frac{1}{x}\).<br/>
+      לאחר עיבוד מתקבל: \(y_p = -\frac{e^{2x}}{x}\).<br/>
+      הפתרון הכללי: \(y = C_1 e^{2x} + C_2 x e^{2x} - \frac{e^{2x}}{x}\).
     `,
     
     check: {
       type: 'variation_parameters_form',
-      homogeneousTerms: ['cos(x)', 'sin(x)'],
-      particularTerm: 'exp(x)',
-      particularCoeff: 0.5
+      homogeneousTerms: ['exp(2*x)', 'x*exp(2*x)'],
+      particularTerm: 'exp(2*x)/x',
+      particularCoeff: -1
     }
   }
 ];
@@ -461,14 +478,14 @@ const btnAIHelp = document.getElementById('btnAIHelp');
   function setStatus(msg, cls){
     const el = document.getElementById('status');
     el.className = `status ${cls||''}`;
-    el.textContent = (msg||'') + (cls==='ok' ? '  @ open university' : '');
+    el.textContent = msg||'';
   }
 
   let debTimer=null; function debounce(fn,ms=180){ clearTimeout(debTimer); debTimer=setTimeout(fn,ms) }
   async function process(){
     const raw0 = inputEl.value, raw = sanitizeBasic(raw0);
     if(!raw){ document.getElementById('render').innerHTML=''; setStatus('',''); return }
-    const forced = forceLatexEl.checked, latexMode = forced || looksLikeLatex(raw);
+    const latexMode = looksLikeLatex(raw);
     try{
       if(latexMode){
         await renderLatexTo('render', raw, true);

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>DF_3 Verification</title>
+<style>
+  :root{
+    --bg:#0e1424; --panel:#111827; --ink:#e5e7eb; --muted:#9aa6b2;
+    --ring:#334155; --accent:#60a5fa;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:'Segoe UI','Tahoma','Arial','David','FrankRuehl',serif;
+    padding:20px;direction:rtl;
+  }
+  .container{max-width:800px;margin:0 auto;background:var(--panel);
+    border:1px solid var(--ring);border-radius:14px;padding:24px;}
+  h1{font-size:1.6rem;margin:0 0 20px;color:var(--accent)}
+  .field{background:var(--bg);border:1px solid var(--ring);
+    border-radius:10px;padding:12px;margin:10px 0;font-family:monospace;
+    direction:ltr;text-align:left;}
+  .label{color:var(--muted);font-size:0.9rem;margin:15px 0 5px;}
+  code{background:var(--bg);padding:2px 6px;border-radius:4px;
+    font-family:monospace;color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>DF_3 Directory Verification</h1>
+
+  <div class="label">ID Field:</div>
+  <div class="field">id: 'ode_second_order_variation_params_01'</div>
+
+  <div class="label">Solution Steps HTML (solutionStepsHtml):</div>
+  <div class="field">
+    המשוואה ההומוגנית: \(y'' + y = 0\) עם \(r^2 + 1 = 0\).<br/>
+    שורשים מרוכבים: \(r = \pm i\).<br/>
+    הפתרון ההומוגני: \(y_h = C_1 \cos x + C_2 \sin x\).<br/>
+    לפתרון פרטי בוריאציית פרמטרים: \(y_1 = \cos x, y_2 = \sin x\).<br/>
+    הרונסקיאן: \(W(y_1, y_2) = \cos^2 x + \sin^2 x = 1\).<br/>
+    חישוב האינטגרלים: (int -e^x sin x , dx) ו-(int e^x s x , dx) לפי וריאציית פרמטרים.<br/>
+    לאחר עיבוד האינטגרלים מקבלים: (y_p = (1/2)e^x).<br/>
+    הפתרון הכללי: (y = C_1 \cos x + C_2 \sin x + (1/2)e^x).
+  </div>
+
+  <div class="label">Translation:</div>
+  <div class="field" style="direction:ltr;text-align:left;line-height:1.8;">
+    1. The homogeneous equation: y'' + y = 0 with r² + 1 = 0<br/>
+    2. Complex roots: r = ±i<br/>
+    3. The homogeneous solution: y_h = C_1 cos x + C_2 sin x<br/>
+    4. For particular solution using variation of parameters: y_1 = cos x, y_2 = sin x<br/>
+    5. The Wronskian: W(y_1, y_2) = cos²x + sin²x = 1<br/>
+    6. Calculating the integrals: (int -e^x sin x, dx) and (int e^x cos x, dx) using variation of parameters<br/>
+    7. After processing the integrals we get: y_p = (1/2)e^x<br/>
+    8. The general solution: y = C_1 cos x + C_2 sin x + (1/2)e^x
+  </div>
+
+  <div class="label">File Location:</div>
+  <div class="field">C:\Users\Lenovo\Documents\Projects\shir-openu\ODE_20218\2nd\DF\DF_3\index.html</div>
+
+  <div class="label">Lines:</div>
+  <div class="field">
+    ID: Line 259<br/>
+    solutionStepsHtml: Lines 285-294
+  </div>
+</div>
+</body>
+</html>
