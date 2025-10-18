@@ -505,9 +505,8 @@ const btnAIHelp = document.getElementById('btnAIHelp');
       }
     }catch(err){
       document.getElementById('render').innerHTML =
-    }catch(err){
-      await renderLatexTo('render', raw, true);
-      setStatus('', '');
+        `<div class="monospace">שגיאה בעיבוד\n${(err?.message||String(err))}\n\nקלט\n${raw}</div>`;
+      setStatus('שגיאה בעיבוד — לבדוק תחביר', 'bad');
     }
   }
 
