@@ -1,7 +1,7 @@
 // api/ai-hint.js
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const EXERCISE_MODE = 1; // 0 = exam mode, 1 = practice mode
+const MAX_ATTEMPTS = 10;
 
 export default async function handler(req, res) {
   // CORS headers
@@ -17,7 +17,39 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { userInput, problemData, conversationHistory } = req.body;
+  const { userInput, problemData, conversationHistory, exerciseMode } = req.body;
+
+  // בדיקת מכסת ניסיונות
+  if (conversationHistory.length >= MAX_ATTEMPTS) {
+    const solutionText = exerciseMode === 1
+      ? `הסתיימה מכסת ${MAX_ATTEMPTS} ניסיונות... זהו תרגיל אימון ולהלן שלד הפתרון
+
+המשוואה ההומוגנית: y'' - 4y' + 4y = 0 עם r² - 4r + 4 = 0
+
+פירוק: (r - 2)² = 0
+
+שורש כפול: r = 2
+
+הפתרון ההומוגני: y_h = C₁e^(2x) + C₂xe^(2x)
+
+לפתרון פרטי בוריאציית פרמטרים: y₁ = e^(2x), y₂ = xe^(2x)
+
+פישוט g(x): g(x) = (e^x/x)² = e^(2x)/x²
+
+הורונסקיאן: W(y₁, y₂) = e^(4x)
+
+חישוב האינטגרלים לפי שיטת וריאציית פרמטרים:
+u₁' = -g(x)y₂/W = -(e^(2x)/x²)(xe^(2x))/e^(4x) = -1/x
+u₂' = g(x)y₁/W = (e^(2x)/x²)(e^(2x))/e^(4x) = 1/x²
+
+אינטגרציה: u₁ = -ln|x|, u₂ = -1/x
+
+לאחר עיבוד מתקבל: y_p = -e^(2x)/x
+
+הפתרון הכללי: y = C₁e^(2x) + C₂xe^(2x) - e^(2x)/x`
+      : `הסתיימה מכסת ${MAX_ATTEMPTS} ניסיונות... ניתן להמשיך בעוד 24 שעות`;
+    return res.status(200).json({ hint: solutionText });
+  }
 
   try {
     const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
@@ -60,12 +92,12 @@ You are a mathematics tutor helping students solve this specific differential eq
 **y'' - 4y' + 4y = (e^x/x)²**
 
 ## Response Style Rules
-- Default to HEBREW, but adapt to any language the student uses or requests
+- Default to HEBREW, but immediately adapt to any other language the student uses or explicitly requests - student's language preference always overrides the default
 - Keep responses SHORT (1-3 sentences maximum)
 - NO greetings or pleasantries (no "Hello", "Hi", "Good luck", etc.)
 - Be DIRECT and CONCISE
-- Use gender-neutral language in Hebrew (לסמן, לפתור - not סמן/סמני)
-- Respond to any student request EXCEPT: never give the final answer before 10 total attempts (or as defined in the exercise mode)
+- Use gender-neutral language in ALL languages (use infinitives, plural forms, or other neutral constructions appropriate to the language - avoid gendered imperatives or forms that assume student's gender)
+- Respond to any student request EXCEPT: never give the final answer before ${MAX_ATTEMPTS} total attempts (or as defined in the exercise mode)
 - Use mathematical notation when appropriate
 - Focus ONLY on the mathematical content
 
@@ -157,15 +189,10 @@ Confirm briefly in Hebrew.
 ### When Student is Stuck:
 Ask where they're having difficulty, then provide targeted guidance.
 
-### After 10 Total Attempts:
+### After ${MAX_ATTEMPTS} Total Attempts:
 
-${EXERCISE_MODE === 1 ? `
-**שלד הפתרון:**
-
-**הפתרון הסופי:**
-y = C₁e^(2x) + C₂xe^(2x) - e^(2x)/x
-
-**שלבי הפתרון:**
+${exerciseMode === 1 ? `
+**הסתיימה מכסת ${MAX_ATTEMPTS} ניסיונות... זהו תרגיל אימון ולהלן שלד הפתרון**
 
 המשוואה ההומוגנית: y'' - 4y' + 4y = 0 עם r² - 4r + 4 = 0
 
@@ -191,7 +218,7 @@ u₂' = g(x)y₁/W = (e^(2x)/x²)(e^(2x))/e^(4x) = 1/x²
 
 הפתרון הכללי: y = C₁e^(2x) + C₂xe^(2x) - e^(2x)/x
 ` : `
-"נגמרה מכסת הניסיונות לתרגיל זה ליום הנוכחי. ניתן להסתכל בשתי לשוניות הרמז, לנסות שוב מחר, או לחכות לפרסום הפתרונות"
+הסתיימה מכסת ${MAX_ATTEMPTS} ניסיונות... ניתן להמשיך בעוד 24 שעות
 `}
 
 ## IMPORTANT

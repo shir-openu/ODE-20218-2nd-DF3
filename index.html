@@ -264,6 +264,7 @@ y = C_1*sin(3x) + C_2*cos(2x) + x*ln|x| + (x^2)/2"></textarea>
 <script>
 // API Endpoint
 const API_ENDPOINT = 'https://order2ex6-lt2xqm3vj-shir-openus-projects.vercel.app/api/ai-hint';
+const EXERCISE_MODE = 0; // TESTING EXAM MODE
 
 /* מבנה נתונים של תרגילים */
 const problems = [
@@ -466,6 +467,7 @@ function checkExpSolution(userRaw) {
 
 /* UI wiring + loadProblem */
 let conversationHistory = [];
+let attemptCount = 0;
 
 waitForLibraries(function(){
   const inputEl = document.getElementById('inputRaw');
@@ -489,7 +491,6 @@ const btnAIHelp = document.getElementById('btnAIHelp');
     try{
       if(latexMode){
         await renderLatexTo('render', raw, true);
-        setStatus('מעובד במצב LaTeX', 'ok');
       }else{
         const plain = normalizeToPlain(raw);
         const node = math.parse(plain);
@@ -501,7 +502,6 @@ const btnAIHelp = document.getElementById('btnAIHelp');
         latex = latex.replace(/C\\_4/g, 'C_{4}');
         
         await renderLatexTo('render', latex, true);
-        setStatus('מעובד במצב Plain → LaTeX באמצעות mathjs', 'ok');
       }
     }catch(err){
       document.getElementById('render').innerHTML =
@@ -515,9 +515,10 @@ const btnAIHelp = document.getElementById('btnAIHelp');
   
   btnClear.addEventListener('click', ()=>{
     inputEl.value=''; document.getElementById('render').innerHTML=''; setStatus('','');
-    document.getElementById('checkMsg').textContent=''; 
+    document.getElementById('checkMsg').textContent='';
     document.getElementById('aiResponse').style.display='none';
     conversationHistory = [];
+    attemptCount = 0;
     inputEl.focus();
   });
   
@@ -551,15 +552,15 @@ const btnAIHelp = document.getElementById('btnAIHelp');
   btnAIHelp.addEventListener('click', async function() {
     const userInput = sanitizeBasic(inputEl.value);
     const aiBox = document.getElementById('aiResponse');
-    
+
     if (!userInput) {
       alert('יש להזין תשובה לפני בקשת עזרה');
       return;
     }
-    
+
     aiBox.style.display = 'block';
     document.getElementById('aiResponseContent').innerHTML = '<div class="ai-message ai-loading"><div class="spinner"></div>מתבצעת בדיקת הקלט שלכם, המתינו מספר שניות...</div>';
-    
+
     try {
       const response = await fetch(API_ENDPOINT, {
         method: 'POST',
@@ -575,22 +576,24 @@ const btnAIHelp = document.getElementById('btnAIHelp');
   hint1: problems[0].hint1Html,
   hint2: problems[0].hint2Html
 },
-          conversationHistory: []
+          conversationHistory: conversationHistory,
+          exerciseMode: EXERCISE_MODE
         })
       });
-      
+
       const data = await response.json();
-      
+
       if (data.error) {
         document.getElementById('aiResponseContent').innerHTML = '<div class="ai-message" style="color:var(--bad)">שגיאה: ' + data.error + '</div>';
         return;
       }
-      
-     // לא שומרים היסטוריה - מציגים רק תשובה אחרונה
-conversationHistory = [{
+
+     // שומרים היסטוריה מלאה
+conversationHistory.push({
   user: userInput,
   ai: data.hint
-}];
+});
+attemptCount++;
 
 displayAIResponse();
       
@@ -604,6 +607,7 @@ displayAIResponse();
   btnCloseAI.addEventListener('click', function() {
     document.getElementById('aiResponse').style.display = 'none';
     conversationHistory = [];
+    attemptCount = 0;
   });
 
   function displayAIResponse() {
@@ -611,7 +615,7 @@ displayAIResponse();
     let html = '';
     
     conversationHistory.forEach((turn, i) => {
-      html += `<div class="ai-message">
+      html += `<div class="ai-message"><strong>שאילתה #${i + 1}:</strong><br>
         <strong>התשובה שהוזנה:</strong> <code>${turn.user}</code>
       </div>`;
       html += `<div class="ai-message" style="background:#1e2940">
