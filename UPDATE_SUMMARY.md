@@ -8,8 +8,8 @@
 - ✅ Updated differential equation from `y'' + y = e^x` to `y'' - 4y' + 4y = (e^x/x)²`
 - ✅ Updated complete solution:
   - Homogeneous: `y_h = C_1*e^(2x) + C_2*x*e^(2x)` (repeated root r=2)
-  - Particular: `y_p = -e^(2x)/x`
-  - General: `y = C_1*e^(2x) + C_2*x*e^(2x) - e^(2x)/x`
+  - Particular: `y_p = -e^(2x)ln|x|`
+  - General: `y = C_1*e^(2x) + C_2*x*e^(2x) - e^(2x)ln|x|`
 - ✅ Updated all hints and progressive help sections
 - ✅ Updated Hebrew solution skeleton for both practice and exam modes
 
@@ -24,7 +24,7 @@
 - ✅ Updated `solutionStepsHtml` with complete new solution steps (lines 286-299)
 - ✅ Updated `check` object parameters (lines 301-306):
   - `homogeneousTerms`: ['exp(2*x)', 'x*exp(2*x)']
-  - `particularTerm`: 'exp(2*x)/x'
+  - `particularTerm`: 'exp(2*x)*ln(abs(x))'
   - `particularCoeff`: -1
 
 ## New Differential Equation
@@ -40,8 +40,8 @@
 - **Homogeneous solution:** y_h = C₁e^(2x) + C₂xe^(2x)
 - **g(x) simplification:** g(x) = (e^x/x)² = e^(2x)/x²
 - **Wronskian:** W(y₁, y₂) = e^(4x)
-- **Particular solution:** y_p = -e^(2x)/x
-- **General solution:** y = C₁e^(2x) + C₂xe^(2x) - e^(2x)/x
+- **Particular solution:** y_p = -e^(2x)ln|x|
+- **General solution:** y = C₁e^(2x) + C₂xe^(2x) - e^(2x)ln|x|
 
 ## Exercise Mode
 Currently set to **EXERCISE_MODE = 1** (Practice Mode)
