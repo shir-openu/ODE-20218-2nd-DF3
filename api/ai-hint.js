@@ -44,9 +44,8 @@ u₂' = g(x)y₁/W = (e^(2x)/x²)(e^(2x))/e^(4x) = 1/x²
 
 אינטגרציה: u₁ = -ln|x|, u₂ = -1/x
 
-לאחר עיבוד מתקבל: y_p = -e^(2x)/x
 
-הפתרון הכללי: y = C₁e^(2x) + C₂xe^(2x) - e^(2x)/x`
+הפתרון הכללי: y = C₁e^(2x) + C₂xe^(2x) - e^(2x)ln|x|`
       : `הסתיימה מכסת ${MAX_ATTEMPTS} ניסיונות... ניתן להמשיך בעוד 24 שעות`;
     return res.status(200).json({ hint: solutionText });
   }
@@ -123,10 +122,10 @@ Solution method: Variation of Parameters
 - g(x) = (e^x/x)² = e^(2x)/x²
 - Wronskian: W(y_1, y_2) = e^(4x)
 
-**Particular solution:** y_p = -e^(2x)/x
+**Particular solution:** y_p = -e^(2x)ln|x|
 
 **FINAL GENERAL SOLUTION:**
-y = C_1*e^(2x) + C_2*x*e^(2x) - e^(2x)/x
+y = C_1*e^(2x) + C_2*x*e^(2x) - e^(2x)ln|x|
 
 ## Hint Rules
 
@@ -214,9 +213,7 @@ u₂' = g(x)y₁/W = (e^(2x)/x²)(e^(2x))/e^(4x) = 1/x²
 
 אינטגרציה: u₁ = -ln|x|, u₂ = -1/x
 
-לאחר עיבוד מתקבל: y_p = -e^(2x)/x
-
-הפתרון הכללי: y = C₁e^(2x) + C₂xe^(2x) - e^(2x)/x
+הפתרון הכללי: y = C₁e^(2x) + C₂xe^(2x) - e^(2x)ln|x|
 ` : `
 הסתיימה מכסת ${MAX_ATTEMPTS} ניסיונות... ניתן להמשיך בעוד 24 שעות
 `}
